@@ -1,0 +1,35 @@
+---
+title: "Building Role-Based Authentication in Django"
+excerpt: "An approach to implementing role-based access control in Django applications that stays consistent across the API and the admin."
+date: "2026-04-06"
+tags: ["Django", "Authentication", "Security"]
+published: true
+---
+
+Most business applications aren't single-role — an HRMS needs administrators, HR staff, and managers to see different things; an LMS needs students, teachers, and school admins to have different permissions. Getting role-based access control right early saves a lot of scattered `if user.role ==` checks later.
+
+## Start With a Clear Role Model
+
+Before writing any permission logic, define the roles explicitly — as a model, a choice field, or Django's group system — and document what each role can and cannot do. A permission system without a clear model behind it tends to grow inconsistent as the application does.
+
+## Extend Django's User Model Deliberately
+
+Rather than bolting role logic onto the default `User` model, a dedicated `Profile` or role field (or Django's built-in `Group`/`Permission` system for more granular cases) keeps authentication and authorization concerns separate. Custom permission classes in Django REST Framework can then check against this role cleanly.
+
+## Centralize Permission Logic
+
+Role checks scattered across views are the biggest source of authorization bugs — a check added to one endpoint and forgotten on another. Centralizing logic in reusable DRF permission classes, or a small policy layer, means every endpoint enforces the same rules consistently, and a rule change happens in one place.
+
+## Don't Forget the Django Admin
+
+If staff use the Django admin directly, `ModelAdmin.has_change_permission` and related hooks need the same role logic as the API — otherwise the admin becomes a backdoor around carefully designed API permissions.
+
+## Test Authorization, Not Just Authentication
+
+It's easy to test that login works and under-test that a manager genuinely can't access another manager's data. Authorization bugs tend to be silent — the request succeeds, it just returns data it shouldn't. Explicit tests for "user in role X cannot access resource Y" catch what functional testing alone often misses.
+
+## Keep Tokens and Sessions Scoped
+
+Whether using session auth or token-based auth (JWT or DRF's token framework), make sure the token payload or session doesn't carry more implicit trust than intended — role information should be checked against the database on each request where it matters, not just trusted from a token claim that could go stale.
+
+Role-based access control done well is invisible to users and boring to maintain — which is exactly the goal.

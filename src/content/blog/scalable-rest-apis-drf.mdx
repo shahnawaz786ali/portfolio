@@ -1,0 +1,39 @@
+---
+title: "How to Design Scalable REST APIs with Django REST Framework"
+excerpt: "Principles for designing REST APIs with Django REST Framework that stay maintainable and performant as an application grows."
+date: "2026-02-09"
+tags: ["Django REST Framework", "API Design", "Backend"]
+published: true
+---
+
+Django REST Framework makes it easy to expose an API quickly — but the defaults that work for a small project can become a liability as the application grows. Here are the principles I follow when designing APIs meant to last.
+
+## Design Around Resources, Not Endpoints
+
+A REST API should be organized around resources — users, orders, projects — with consistent URL patterns and HTTP verbs mapping to actions. DRF's `ViewSet` and `Router` classes encourage this structure naturally, which keeps the API predictable for consumers.
+
+## Serializers Are Your Contract
+
+Serializers define what the client sees, not just what the database contains. Keep serialization logic separate from business logic — a serializer should describe data shape, while a service layer or model method should handle the actual logic. This separation makes both easier to test.
+
+## Use Nested Serializers Carefully
+
+Deeply nested serializers are convenient but can cause N+1 query problems fast. Pair them with `select_related` and `prefetch_related` on the queryset, and consider a lighter "list" serializer versus a fuller "detail" serializer for endpoints with different needs.
+
+## Versioning From Day One
+
+Even a simple `/api/v1/` prefix saves significant pain later. APIs evolve, and having a versioning strategy in place before you need it avoids breaking existing clients when the data model changes.
+
+## Authentication and Permissions
+
+DRF's permission classes should be explicit per view or viewset rather than relying on global defaults alone. For role-based systems, custom permission classes checking against user roles keep authorization logic centralized and testable, rather than scattered through view logic.
+
+## Document as You Build
+
+Tools like `drf-spectacular` generate OpenAPI/Swagger documentation directly from your serializers and views. Keeping documentation generated rather than hand-maintained means it never drifts out of sync with the actual API.
+
+## Pagination and Filtering by Default
+
+Any endpoint that can return an unbounded list needs pagination from the start — retrofitting it after a client depends on unpaginated responses is a breaking change. Combine DRF's pagination classes with `django-filter` for consistent, predictable querying.
+
+Good API design isn't about anticipating every future requirement — it's about making the common changes (adding a field, changing a permission, adding a filter) cheap, without breaking what's already built on top of it.

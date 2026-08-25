@@ -1,0 +1,35 @@
+---
+title: "PostgreSQL Best Practices for Django Applications"
+excerpt: "Practical database design and query practices for keeping a Django application's PostgreSQL database fast and maintainable."
+date: "2026-02-23"
+tags: ["PostgreSQL", "Django", "Database"]
+published: true
+---
+
+Django's ORM makes it easy to avoid writing raw SQL — but that convenience can hide expensive queries if you're not paying attention to what the ORM generates. A few practices go a long way toward keeping a PostgreSQL-backed Django application fast as it grows.
+
+## Index What You Query, Not What You Guess
+
+Add indexes to fields used in `filter()`, `order_by()`, and `unique_together` constraints — especially foreign keys used in lookups and fields used in frequent `WHERE` clauses. Django's `Meta.indexes` makes this declarative and version-controlled alongside the model itself.
+
+## Watch for N+1 Queries
+
+The most common performance issue in Django apps isn't a slow query — it's hundreds of fast ones. `select_related` for foreign keys and `prefetch_related` for many-to-many and reverse foreign key relationships collapse what would be N+1 queries into one or two. `django-debug-toolbar` in development makes these instantly visible.
+
+## Use Database Constraints, Not Just Application Validation
+
+Application-level validation is necessary but not sufficient — race conditions and direct database access can bypass it. Use PostgreSQL-level constraints (`unique_together`, `CheckConstraint`, foreign key constraints) so data integrity doesn't depend solely on application code being correct every time.
+
+## Migrations Deserve Care in Production
+
+Adding a NOT NULL column to a large table, or an index without `CONCURRENTLY`, can lock the table and cause downtime. Plan migrations that touch large tables in stages — add nullable, backfill, then enforce — and use PostgreSQL's concurrent index creation where the migration framework supports it.
+
+## Connection Pooling Matters at Scale
+
+Django opens a new database connection per request by default unless persistent connections or a pooler like PgBouncer are configured. As traffic grows, connection overhead becomes a real bottleneck — configuring `CONN_MAX_AGE` or introducing a pooler is a common and effective fix.
+
+## Use `EXPLAIN ANALYZE` When in Doubt
+
+When a query feels slow, guessing rarely helps. Running `EXPLAIN ANALYZE` on the generated SQL shows exactly where time is spent — sequential scans that should be index scans, expensive sorts, or joins that need better indexing.
+
+Most PostgreSQL performance problems in Django applications aren't exotic — they're missing indexes, unnecessary queries, and migrations that weren't planned for scale. Catching these early is far cheaper than fixing them after the data has grown.

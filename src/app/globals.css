@@ -1,0 +1,323 @@
+@import "tailwindcss";
+@plugin "@tailwindcss/typography";
+@custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
+
+/* ============================================================
+   DESIGN TOKENS
+   ============================================================ */
+
+:root {
+  /* Surfaces */
+  --background: #f7f7fb;
+  --surface: #ffffff;
+  --surface-hover: #f1f1f8;
+  --foreground: #0a0a12;
+  --muted: #5c5d6e;
+  --border: #e3e3ee;
+
+  /* Brand accents */
+  --accent: #6d5bf5;
+  --accent-foreground: #ffffff;
+  --accent-soft: #ece9ff;
+  --purple: #8b5cf6;
+  --blue: #4f7dfb;
+  --pink: #ec4899;
+  --cyan: #22d3ee;
+  --teal: #0ea5a5;
+
+  /* Glass */
+  --glass-bg: rgba(255, 255, 255, 0.55);
+  --glass-border: rgba(10, 10, 20, 0.08);
+  --glass-blur: 18px;
+
+  /* Shadows */
+  --shadow-card: 0 1px 2px rgba(20, 20, 40, 0.04), 0 12px 32px -12px rgba(20, 20, 40, 0.12);
+  --shadow-glow-purple: 0 0 0 1px rgba(139, 92, 246, 0.15), 0 8px 40px -8px rgba(139, 92, 246, 0.35);
+  --shadow-glow-blue: 0 0 0 1px rgba(79, 125, 251, 0.15), 0 8px 40px -8px rgba(79, 125, 251, 0.35);
+
+  /* Radii */
+  --radius-sm: 0.625rem;
+  --radius: 1rem;
+  --radius-lg: 1.5rem;
+  --radius-full: 999px;
+
+  /* Motion */
+  --ease-premium: cubic-bezier(0.22, 1, 0.36, 1);
+  --duration-micro: 200ms;
+  --duration-card: 400ms;
+  --duration-section: 700ms;
+}
+
+:root[data-theme="dark"] {
+  --background: #05060a;
+  --surface: #0c0e16;
+  --surface-hover: #12141f;
+  --foreground: #f5f5f8;
+  --muted: #9294a6;
+  --border: #1d2030;
+
+  --accent: #a78bfa;
+  --accent-foreground: #08090f;
+  --accent-soft: #1c1832;
+  --purple: #a78bfa;
+  --blue: #6d9bff;
+  --pink: #f472b6;
+  --cyan: #5eead4;
+  --teal: #2dd4bf;
+
+  --glass-bg: rgba(18, 20, 32, 0.55);
+  --glass-border: rgba(255, 255, 255, 0.08);
+  --glass-blur: 18px;
+
+  --shadow-card: 0 1px 2px rgba(0, 0, 0, 0.3), 0 20px 48px -16px rgba(0, 0, 0, 0.55);
+  --shadow-glow-purple: 0 0 0 1px rgba(167, 139, 250, 0.2), 0 8px 44px -6px rgba(167, 139, 250, 0.4);
+  --shadow-glow-blue: 0 0 0 1px rgba(109, 155, 255, 0.2), 0 8px 44px -6px rgba(109, 155, 255, 0.4);
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-surface: var(--surface);
+  --color-surface-hover: var(--surface-hover);
+  --color-foreground: var(--foreground);
+  --color-muted: var(--muted);
+  --color-border: var(--border);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent-soft: var(--accent-soft);
+  --color-purple: var(--purple);
+  --color-blue: var(--blue);
+  --color-pink: var(--pink);
+  --color-cyan: var(--cyan);
+  --color-teal: var(--teal);
+  --radius-default: var(--radius);
+  --radius-sm: var(--radius-sm);
+  --radius-lg: var(--radius-lg);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+* {
+  border-color: var(--border);
+}
+
+html {
+  scroll-behavior: smooth;
+  color-scheme: light;
+}
+
+html[data-theme="dark"] {
+  color-scheme: dark;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans), ui-sans-serif, system-ui, sans-serif;
+  transition: background-color 0.25s ease, color 0.25s ease;
+}
+
+::selection {
+  background: var(--accent);
+  color: var(--accent-foreground);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ============================================================
+   LAYOUT UTILITIES
+   ============================================================ */
+
+.container-px {
+  padding-left: 1.25rem;
+  padding-right: 1.25rem;
+}
+
+@media (min-width: 640px) {
+  .container-px {
+    padding-left: 2rem;
+    padding-right: 2rem;
+  }
+}
+
+.text-balance {
+  text-wrap: balance;
+}
+
+/* ============================================================
+   GRADIENT & GLOW SYSTEM
+   ============================================================ */
+
+.gradient-text {
+  background: linear-gradient(120deg, var(--foreground) 30%, var(--accent) 70%, var(--cyan) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.gradient-text-brand {
+  background: linear-gradient(100deg, var(--purple), var(--blue), var(--pink), var(--purple));
+  background-size: 300% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: gradient-shift 8s ease infinite;
+}
+
+@keyframes gradient-shift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+.glow-border {
+  position: relative;
+  border: 1px solid var(--glass-border);
+}
+
+.glow-border::before {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  padding: 1px;
+  background: linear-gradient(120deg, var(--purple), var(--blue), var(--pink));
+  opacity: 0;
+  transition: opacity var(--duration-card) var(--ease-premium);
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+}
+
+.glow-border:hover::before {
+  opacity: 1;
+}
+
+/* ============================================================
+   GLASSMORPHISM
+   ============================================================ */
+
+.glass {
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  backdrop-filter: blur(var(--glass-blur)) saturate(140%);
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(140%);
+}
+
+.glass-panel {
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  backdrop-filter: blur(var(--glass-blur)) saturate(140%);
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(140%);
+  box-shadow: var(--shadow-card);
+  border-radius: var(--radius-lg);
+}
+
+/* ============================================================
+   BACKGROUND ATMOSPHERE
+   ============================================================ */
+
+.grid-backdrop {
+  background-image:
+    linear-gradient(to right, var(--border) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--border) 1px, transparent 1px);
+  background-size: 56px 56px;
+  mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, black 40%, transparent 100%);
+}
+
+.grid-backdrop-animated {
+  background-image:
+    linear-gradient(to right, var(--border) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--border) 1px, transparent 1px);
+  background-size: 64px 64px;
+  mask-image: radial-gradient(ellipse 70% 70% at 50% 30%, black 30%, transparent 90%);
+  animation: grid-drift 40s linear infinite;
+}
+
+@keyframes grid-drift {
+  from { background-position: 0 0; }
+  to { background-position: 64px 64px; }
+}
+
+.noise-fade {
+  background: radial-gradient(circle at 20% 20%, var(--accent-soft) 0%, transparent 45%),
+    radial-gradient(circle at 80% 0%, color-mix(in srgb, var(--cyan) 12%, transparent) 0%, transparent 40%);
+}
+
+.ambient-glow {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(90px);
+  pointer-events: none;
+}
+
+@keyframes float-slow {
+  0%, 100% { transform: translate3d(0, 0, 0) rotate(0deg); }
+  50% { transform: translate3d(0, -18px, 0) rotate(3deg); }
+}
+
+@keyframes float-slower {
+  0%, 100% { transform: translate3d(0, 0, 0) rotate(0deg); }
+  50% { transform: translate3d(14px, -12px, 0) rotate(-4deg); }
+}
+
+.animate-float {
+  animation: float-slow 7s ease-in-out infinite;
+}
+
+.animate-float-slower {
+  animation: float-slower 9s ease-in-out infinite;
+}
+
+@keyframes pulse-glow {
+  0%, 100% { opacity: 0.5; }
+  50% { opacity: 1; }
+}
+
+.animate-pulse-glow {
+  animation: pulse-glow 3.5s ease-in-out infinite;
+}
+
+/* ============================================================
+   MARQUEE
+   ============================================================ */
+
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+.animate-marquee {
+  animation: marquee 24s linear infinite;
+}
+
+.scrollbar-thin::-webkit-scrollbar {
+  height: 6px;
+  width: 6px;
+}
+
+.scrollbar-thin::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 999px;
+}
+
+/* ============================================================
+   FORM ELEMENTS (autofill fix on dark glass inputs)
+   ============================================================ */
+
+input:-webkit-autofill,
+textarea:-webkit-autofill,
+select:-webkit-autofill {
+  -webkit-text-fill-color: var(--foreground);
+  -webkit-box-shadow: 0 0 0 1000px var(--surface) inset;
+  transition: background-color 9999s ease-in-out 0s;
+}

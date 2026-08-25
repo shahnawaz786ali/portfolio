@@ -1,0 +1,31 @@
+---
+title: "React vs Next.js: When Should You Use Each?"
+excerpt: "React and Next.js solve different problems. Here's how I decide which one fits a given project."
+date: "2026-03-23"
+tags: ["React", "Next.js", "Frontend"]
+published: true
+---
+
+React and Next.js get compared as if they're competing choices, but they're not really solving the same problem. React is a UI library. Next.js is a framework built on top of it, adding routing, rendering strategies, and the infrastructure a real application needs.
+
+## What React Alone Gives You
+
+A plain React app (via Vite or a similar bundler) gives you full control with minimal opinions — you choose the router, the data-fetching approach, the build tooling. That's a reasonable choice for a purely client-side application: an internal dashboard behind authentication, a highly interactive tool where SEO is irrelevant, or a component embedded inside another system.
+
+## What Next.js Adds
+
+Next.js brings Server Components, file-based routing, multiple rendering strategies (static, server-rendered, incrementally regenerated), built-in image and font optimization, and a clear structure for API routes. For anything public-facing — marketing sites, e-commerce, content-driven applications, or any product where search visibility and initial load performance matter — that's a meaningful advantage over assembling the same capabilities from separate libraries.
+
+## The SEO and Performance Angle
+
+This is usually the deciding factor. A client-only React app ships a near-empty HTML shell and renders everything in the browser — workable for logged-in tools, poor for anything that needs to rank in search or load fast on a slow connection. Next.js can render content on the server or at build time, so the browser receives meaningful HTML immediately.
+
+## Data Fetching Complexity
+
+React alone leaves data fetching entirely up to you — typically a client-side library like React Query alongside your own loading and error states. Next.js's Server Components let data fetching happen on the server, closer to the database, reducing the client-side JavaScript needed and simplifying the data flow for many common cases.
+
+## How I Decide
+
+If the project is public-facing, content-driven, or SEO matters at all, Next.js is the default. If it's a purely internal, authenticated, highly interactive application where none of Next.js's rendering strategies add real value, a plain React setup can be simpler and involve fewer moving parts.
+
+Neither is "better" in the abstract — the right choice depends on whether the extra structure Next.js provides is solving a problem you actually have.

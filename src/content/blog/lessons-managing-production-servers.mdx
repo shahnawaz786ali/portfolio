@@ -1,0 +1,39 @@
+---
+title: "Lessons Learned from Managing Production Servers"
+excerpt: "Practical lessons from running Linux servers in production — the habits that prevent incidents and the ones that cause them."
+date: "2026-04-20"
+tags: ["Linux", "DevOps", "Server Management"]
+published: true
+---
+
+Writing an application is one skill. Keeping it running reliably in production is another. Managing Linux servers for real applications has a way of teaching lessons that no tutorial covers.
+
+## Logs Are Only Useful If You Look at Them Before an Incident
+
+It's tempting to set up logging and never look at it again until something breaks. Centralizing application and Nginx logs, and actually skimming them occasionally, surfaces slow queries, repeated errors, and unusual traffic patterns before they become outages.
+
+## Automate What You'd Otherwise Forget
+
+SSL renewal, database backups, log rotation, and security updates all have a habit of being "something I'll get to" — until the certificate expires or a disk fills up. A cron job or systemd timer that runs these automatically, with alerting on failure, removes them from the list of things that depend on remembering.
+
+## Least Privilege Isn't Optional
+
+Running the application as a dedicated non-root system user, restricting database users to only the permissions they need, and locking down SSH access with key-based authentication and a restrictive firewall are basic hygiene — not extra steps to skip when time is short.
+
+## Backups You Haven't Tested Aren't Backups
+
+A backup script that runs successfully every night means nothing if the backup file itself is corrupted or the restore process has never actually been tried. Periodically restoring a backup to a throwaway environment is the only way to know backups actually work.
+
+## Deployment Should Be a Script, Not a Memory
+
+Manually SSHing in and running commands in a specific order works right up until it doesn't — a skipped migration, a forgotten restart, a static files step done out of order. A deployment script (even a simple one) removes human memory as a point of failure.
+
+## Monitor Resource Usage Before It's a Problem
+
+Disk space, memory, and CPU usage climbing steadily is a much easier problem to solve on a quiet Tuesday than during a traffic spike. Basic monitoring with alerting thresholds turns a slow-burning problem into a scheduled fix instead of an emergency.
+
+## Downtime Teaches More Than Uptime
+
+Every incident, however small, is worth a genuine look at what happened and why — not to assign blame, but because the fix that comes out of a real incident is usually more durable than anything planned in the abstract.
+
+None of this is glamorous. But the unglamorous habits — logging, backups, least privilege, scripted deploys — are what actually keep a production application boring in the best possible way.

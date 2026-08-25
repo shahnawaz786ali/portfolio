@@ -1,0 +1,39 @@
+---
+title: "How to Deploy a Django Application on DigitalOcean"
+excerpt: "A practical walkthrough of taking a Django application from local development to a production server on DigitalOcean using Gunicorn, Nginx, and SSL."
+date: "2026-01-12"
+tags: ["Django", "DigitalOcean", "Deployment", "DevOps"]
+published: true
+---
+
+Deploying a Django application to production involves more than running `runserver` on a public IP. A production-ready setup needs a proper WSGI server, a reverse proxy, process management, and HTTPS. Here's the approach I use for Django deployments on DigitalOcean.
+
+## 1. Provision the Server
+
+Start with a Droplet running Ubuntu LTS. Update packages, create a non-root user with sudo access, and configure the firewall (`ufw`) to only allow SSH, HTTP, and HTTPS traffic. Disabling root SSH login and using key-based authentication are non-negotiable basics.
+
+## 2. Set Up the Application Environment
+
+Install Python, PostgreSQL, and Nginx. Create a dedicated system user for the application, clone the repository, and set up a virtual environment. Keep secrets — database credentials, `SECRET_KEY`, third-party API keys — in environment variables rather than in the codebase.
+
+## 3. Configure Gunicorn
+
+Django doesn't serve production traffic directly; Gunicorn does. Run Gunicorn as a `systemd` service so it starts on boot and restarts automatically if it crashes. A basic service file points to the project's virtual environment and binds Gunicorn to a Unix socket rather than a TCP port — this keeps the application process off the public network entirely.
+
+## 4. Configure Nginx as a Reverse Proxy
+
+Nginx sits in front of Gunicorn, forwarding requests over the Unix socket, serving static and media files directly, and handling SSL termination. Serving static files through Nginx instead of Django is meaningfully faster and takes load off the application server.
+
+## 5. Add SSL with Let's Encrypt
+
+Certbot automates certificate issuance and renewal. Once Nginx is serving the domain over HTTP, a single `certbot --nginx` run configures HTTPS and sets up auto-renewal via a cron job or systemd timer.
+
+## 6. Database and Migrations
+
+Run `migrate` and `collectstatic` as part of the deployment process, not manually after the fact. For anything beyond a single server, PostgreSQL should run as a managed database rather than colocated on the application server.
+
+## 7. Keep Deployments Repeatable
+
+A shell script or a simple CI pipeline that pulls the latest code, installs dependencies, runs migrations, collects static files, and restarts Gunicorn removes the guesswork from every deploy — and makes rollbacks far less stressful when something goes wrong.
+
+Getting these pieces right once means every future deploy is boring — which is exactly what you want in production.

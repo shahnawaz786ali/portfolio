@@ -1,0 +1,35 @@
+---
+title: "Dockerizing a Django Application for Production"
+excerpt: "A practical guide to containerizing a Django application with Docker and Docker Compose for consistent, reproducible deployments."
+date: "2026-03-09"
+tags: ["Docker", "Django", "DevOps"]
+published: true
+---
+
+"It works on my machine" is exactly the problem Docker solves. Containerizing a Django application means the environment that runs in production is the same one used in development — same Python version, same system dependencies, same configuration surface.
+
+## A Minimal Production Dockerfile
+
+A production Django image typically uses a slim Python base image, installs system dependencies needed for packages like `psycopg2`, copies the application code, installs Python dependencies, and runs Gunicorn as the entry point — not the Django development server. Multi-stage builds keep the final image lean by separating build-time dependencies from what's actually needed at runtime.
+
+## Compose for Local Development
+
+Docker Compose ties together the application, PostgreSQL, and Redis containers with a single configuration file, so a new contributor can get a full working environment running with one command instead of manually installing and configuring each service.
+
+## Keep Configuration in the Environment
+
+Following twelve-factor principles, configuration — database URLs, secret keys, debug flags — should come from environment variables, not be baked into the image. This keeps the same image usable across staging and production, differing only in the environment it's run with.
+
+## Static Files and Volumes
+
+Static and media files need explicit handling in a containerized setup. A common pattern mounts a named volume for media uploads and either bakes collected static files into the image at build time or serves them through Nginx from a shared volume.
+
+## Health Checks and Restart Policies
+
+Defining a health check for the Django container lets orchestration tools detect a hung or crashed process and restart it automatically, rather than silently serving errors until someone notices.
+
+## Separating Web and Worker Containers
+
+If the application uses Celery, the worker process should run in its own container from the same image, not inside the web container. This keeps the web process responsive even if a worker is under heavy load, and lets each be scaled independently.
+
+Docker doesn't replace good deployment practices — it makes them reproducible. The goal isn't just "it runs in a container," it's a deployment that behaves identically every time it's built.
