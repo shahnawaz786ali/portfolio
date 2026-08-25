@@ -72,7 +72,7 @@ export function Hero() {
       />
 
       <Container className="relative grid items-center gap-16 lg:grid-cols-2">
-        <div>
+        <div className="min-w-0">
           <motion.div
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
