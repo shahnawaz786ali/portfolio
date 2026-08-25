@@ -7,7 +7,8 @@ export const siteConfig = {
   description:
     "Full-Stack Software Developer with 6+ years of experience building scalable web applications, backend systems, REST APIs, and business platforms. Experienced across the complete software development lifecycle — architecture, backend, frontend, database design, and production deployment.",
   url: "https://shahnawazali.dev",
-  email: "shahnawaz@vecube.club",
+  email: "shahnawaz.1504ali@gmail.com",
+  phone: "+91 99908 38084",
   location: "India",
   social: {
     github: "https://github.com/shahnawazali",

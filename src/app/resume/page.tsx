@@ -88,7 +88,8 @@ export default function ResumePage() {
             <AnimatedSection>
               <h2 className="text-lg font-semibold uppercase tracking-wide text-muted">Contact</h2>
               <p className="mt-4 text-sm text-muted">
-                {siteConfig.email} · Available for remote freelance and full-time opportunities
+                {siteConfig.email} · {siteConfig.phone} · Available for remote freelance and
+                full-time opportunities
               </p>
             </AnimatedSection>
           </div>

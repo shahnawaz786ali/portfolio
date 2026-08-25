@@ -87,6 +87,14 @@ export function Footer() {
                   </a>
                 </li>
                 <li>
+                  <a
+                    href={`tel:${siteConfig.phone.replace(/\s+/g, "")}`}
+                    className="text-sm text-muted hover:text-foreground"
+                  >
+                    {siteConfig.phone}
+                  </a>
+                </li>
+                <li>
                   <Link href="/contact" className="text-sm text-muted hover:text-foreground">
                     Start a Project
                   </Link>

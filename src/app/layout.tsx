@@ -61,6 +61,7 @@ const personJsonLd = {
   jobTitle: siteConfig.title,
   url: siteConfig.url,
   email: siteConfig.email,
+  telephone: siteConfig.phone,
   image: `${siteConfig.url}/Image/profile.jpg`,
   sameAs: [siteConfig.social.github, siteConfig.social.linkedin].filter(Boolean),
   knowsAbout: [

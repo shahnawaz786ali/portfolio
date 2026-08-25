@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Mail, MapPin, Clock } from "lucide-react";
+import { Mail, MapPin, Clock, Phone } from "lucide-react";
 import { Container } from "@/components/ui/container";
 import { PageHero } from "@/components/ui/page-hero";
 import { ContactForm } from "@/components/contact/contact-form";
@@ -15,6 +15,12 @@ export const metadata: Metadata = {
 
 const infoCards = [
   { icon: Mail, label: "Email", value: siteConfig.email, href: `mailto:${siteConfig.email}` },
+  {
+    icon: Phone,
+    label: "Phone",
+    value: siteConfig.phone,
+    href: `tel:${siteConfig.phone.replace(/\s+/g, "")}`,
+  },
   { icon: Clock, label: "Response Time", value: "Usually within 1–2 business days" },
   { icon: MapPin, label: "Availability", value: "Open to remote freelance & full-time roles" },
 ];

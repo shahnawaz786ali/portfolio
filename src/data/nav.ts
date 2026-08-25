@@ -1,4 +1,5 @@
 import { NavLink, SocialLink } from "@/types";
+import { siteConfig } from "@/lib/site";
 
 export const navLinks: NavLink[] = [
   { label: "Home", href: "/" },
@@ -13,5 +14,5 @@ export const navLinks: NavLink[] = [
 export const socialLinks: SocialLink[] = [
   { label: "GitHub", href: "https://github.com/shahnawazali", icon: "github" },
   { label: "LinkedIn", href: "https://linkedin.com/in/md-shahnawaz-ali-0444b1117", icon: "linkedin" },
-  { label: "Email", href: "mailto:shahnawaz@vecube.club", icon: "mail" },
+  { label: "Email", href: `mailto:${siteConfig.email}`, icon: "mail" },
 ];
